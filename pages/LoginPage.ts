@@ -9,9 +9,9 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.usernameInput = page.getByTestId('username');
-    this.passwordInput = page.getByTestId('password');
-    this.loginButton = page.getByTestId('login-button');
+    this.usernameInput = page.getByRole('textbox', { name: 'Username' });
+    this.passwordInput = page.getByLabel('Password');
+    this.loginButton = page.getByTestId('login-button'); //no role/label, accessibility issue
     this.errorMessage = page.getByTestId('error');
   }
 
