@@ -1,0 +1,28 @@
+{
+  "name": "saucedemo-reqres-qa-automation",
+  "version": "1.0.0",
+  "description": "Playwright + TypeScript UI and API test automation suite",
+  "scripts": {
+    "test": "playwright test",
+    "test:ui": "playwright test tests/ui",
+    "test:api": "playwright test tests/api",
+    "test:headed": "playwright test --headed",
+    "test:ui-mode": "playwright test --ui",
+    "test:report": "playwright show-report"
+  },
+  "keywords": [
+    "playwright",
+    "typescript",
+    "automation",
+    "qa",
+    "api-testing",
+    "ui-testing"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.1.2",
+    "typescript": "^7.0.2"
+  }
+}
