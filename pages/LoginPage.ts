@@ -11,8 +11,8 @@ export class LoginPage {
     this.page = page;
     this.usernameInput = page.getByRole('textbox', { name: 'Username' });
     this.passwordInput = page.getByLabel('Password');
-    this.loginButton = page.getByTestId('login-button'); //no role/label, accessibility issue
-    this.errorMessage = page.getByTestId('error');
+    this.loginButton = page.getByTestId('login-button'); // no role/label, accessibility issue
+    this.errorMessage = page.getByRole('alert').filter({ hasText: 'Epic Sadface' })
   }
 
   async goto(): Promise<void> {
