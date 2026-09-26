@@ -1,5 +1,17 @@
 import { type Page, type Locator } from '@playwright/test';
 
+/**
+ * LoginPage - Page Object for https://www.saucedemo.com
+ *
+ * All locators use getByTestId() because SauceDemo exposes stable
+ * data-test attributes on every interactive element. These are
+ * the most resilient selectors - they won't break on style or label changes.
+ *
+ * data-test=username       - username text field
+ * data-test=password       - password text field
+ * data-test=login-button   - submit button
+ * data-test=error          - error message container (role=alert)
+ */
 export class LoginPage {
   readonly page: Page;
   readonly usernameInput: Locator;
@@ -9,10 +21,10 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.usernameInput = page.getByRole('textbox', { name: 'Username' });
-    this.passwordInput = page.getByLabel('Password');
-    this.loginButton = page.getByTestId('login-button'); // no role/label, accessibility issue
-    this.errorMessage = page.getByRole('alert').filter({ hasText: 'Epic Sadface' })
+    this.usernameInput = page.getByTestId('username');
+    this.passwordInput = page.getByTestId('password');
+    this.loginButton = page.getByTestId('login-button');
+    this.errorMessage = page.getByTestId('error');
   }
 
   async goto(): Promise<void> {
