@@ -19,11 +19,27 @@ export class ProductsPage {
     this.cartBadge = page.getByTestId('shopping-cart-badge');
   }
 
+  /**
+   * Adds `count` distinct products to the cart.
+   *
+   * SauceDemo renders the Add-to-cart button OUTSIDE the
+   * data-test="inventory-item" container, so we cannot scope it
+   * to the item card. Instead we collect all visible Add-to-cart
+   * buttons up front and click them by index. After each click the
+   * button label changes to Remove, so the next index still points
+   * to an un-added item — no re-query needed.
+   */
   async addFirstNItemsToCart(count: number): Promise<void> {
-    for (let i = 0; i < count; i++) {
-      // Click the first available 'Add to cart' button
-      const addToCartButton = this.page.getByRole('button', { name: 'Add to cart' }).first();
-      await addToCartButton.click();
+    // data-test="add-to-cart" is set on every Add-to-cart button
+    const addButtons = this.page.getByTestId(/^add-to-cart/);
+    const total = await addButtons.count();
+    const limit = Math.min(count, total);
+
+    for (let i = 0; i < limit; i++) {
+      // Always click the first visible Add-to-cart button;
+      // after clicking it becomes Remove, so first() naturally
+      // advances to the next product on the following iteration.
+      await addButtons.first().click();
     }
   }
 
@@ -43,7 +59,6 @@ export class ProductsPage {
     const prices: number[] = [];
     for (const elem of priceElements) {
       const text = await elem.textContent();
-      // Remove '$' symbol and parse float
       const cleaned = text?.replace(/[^0-9.]/g, '') ?? '0';
       prices.push(parseFloat(cleaned));
     }
