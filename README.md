@@ -126,9 +126,7 @@ If extending this suite for production enterprise testing, the following enhance
 
 1. **Authentication Storage State (Session Reuse)**:
    - For UI suites with dozens of tests, logging in through the UI before every single test adds overhead. Using Playwright's `storageState` (`global-setup.ts`) would allow caching authenticated cookies/session storage once and injecting it into tests that start directly on `/inventory.html`.
-2. **Schema Validation for API**:
-   - Integrate JSON Schema validation (e.g., [Zod](https://zod.dev/) or [Ajv](https://ajv.js.org/)) to validate response payload shapes automatically without manual property checks.
-3. **Cross-Browser & Mobile Matrix**:
+2. **Cross-Browser & Mobile Matrix**:
    - Enable additional Playwright projects (Firefox, WebKit, Mobile Chrome, Mobile Safari) to verify responsive layouts and cross-browser consistency.
-4. **CI/CD Integration**:
+3. **CI/CD Integration**:
    - Add a GitHub Actions workflow (`.github/workflows/playwright.yml`) running tests on pull requests with artifact upload for HTML test reports and traces on failure.
