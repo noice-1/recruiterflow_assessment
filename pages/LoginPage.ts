@@ -3,14 +3,21 @@ import { type Page, type Locator } from '@playwright/test';
 /**
  * LoginPage - Page Object for https://www.saucedemo.com
  *
- * All locators use getByTestId() because SauceDemo exposes stable
- * data-test attributes on every interactive element. These are
- * the most resilient selectors - they won't break on style or label changes.
+ * Locator strategy (mixed — prefer semantic, fall back to testId):
  *
- * data-test=username       - username text field
- * data-test=password       - password text field
- * data-test=login-button   - submit button
- * data-test=error          - error message container (role=alert)
+ *   usernameInput / passwordInput → getByRole('textbox', { name })
+ *     Both carry aria-label attributes. getByRole validates accessibility
+ *     and is more resilient than a CSS class or placeholder.
+ *
+ *   loginButton → getByRole('button', { name: 'Login' })
+ *     input[type="submit"] maps to role="button"; name comes from value.
+ *
+ *   errorMessage → getByRole('alert')
+ *     The error <h3> lives inside a <div role="alert"> container.
+ *     Playwright's a11y tree exposes the outer container as the alert,
+ *     not the inner <h3>. Using getByRole('alert') is the correct and
+ *     most meaningful choice — it asserts that the error is surfaced
+ *     to assistive technologies as a live region.
  */
 export class LoginPage {
   readonly page: Page;
@@ -21,10 +28,14 @@ export class LoginPage {
 
   constructor(page: Page) {
     this.page = page;
-    this.usernameInput = page.getByTestId('username');
-    this.passwordInput = page.getByTestId('password');
-    this.loginButton = page.getByTestId('login-button');
-    this.errorMessage = page.getByTestId('error');
+    // Inputs carry aria-label — getByRole is the most semantic choice
+    this.usernameInput = page.getByRole('textbox', { name: 'Username' });
+    this.passwordInput = page.getByRole('textbox', { name: 'Password' });
+    // input[type="submit"] with value="Login" — role: button
+    this.loginButton = page.getByRole('button', { name: 'Login' });
+    // The error container is a div[role="alert"] wrapping the <h3> message.
+    // Playwright resolves the alert role on the outer container, not the heading.
+    this.errorMessage = page.getByRole('alert');
   }
 
   async goto(): Promise<void> {
